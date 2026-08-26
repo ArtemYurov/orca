@@ -12,6 +12,7 @@ import { installEditorSaveShortcut, installMonacoEditorFindShortcut } from './ed
 import { getIpynbCodeCellEditorHeight, getIpynbCodeCellPreviewLines } from './ipynb-code-cell-lines'
 import type { IpynbCell } from './ipynb-parse'
 import MonacoCodeExcerpt from './MonacoCodeExcerpt'
+import { resolveMonacoThemeName } from '@/lib/github-desktop-monaco-theme'
 
 export function IpynbMarkdownCell({ source }: { source: string }): React.JSX.Element {
   return (
@@ -91,7 +92,7 @@ function IpynbCodeCellEditor({
   }, [])
 
   useEffect(() => {
-    monaco.editor.setTheme(isDark ? 'vs-dark' : 'vs')
+    monaco.editor.setTheme(resolveMonacoThemeName(isDark))
   }, [isDark])
 
   if (!active) {
@@ -124,7 +125,7 @@ function IpynbCodeCellEditor({
         height={editorHeight}
         defaultLanguage={cell.language}
         language={cell.language}
-        theme={isDark ? 'vs-dark' : 'vs'}
+        theme={resolveMonacoThemeName(isDark)}
         value={source}
         onMount={handleMount}
         onChange={(value) => onChange(value ?? '')}

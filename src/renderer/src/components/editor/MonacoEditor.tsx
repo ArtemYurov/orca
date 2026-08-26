@@ -22,6 +22,7 @@ import { useMonacoEditorDecorations } from './use-monaco-editor-decorations'
 import { useMonacoEditorMount } from './use-monaco-editor-mount'
 import { snapshotMonacoViewState } from './monaco-view-state-persistence'
 import { MonacoMarkdownAnnotationOverlay } from './MonacoMarkdownAnnotationOverlay'
+import { resolveMonacoThemeName } from '@/lib/github-desktop-monaco-theme'
 
 type MonacoEditorProps = {
   fileId: string
@@ -232,7 +233,7 @@ export default function MonacoEditor({
         language={language}
         // Why: defaultValue, not controlled value — Orca owns post-mount content sync; a controlled path would double setValue.
         defaultValue={content}
-        theme={isDark ? 'vs-dark' : 'vs'}
+        theme={resolveMonacoThemeName(isDark)}
         onChange={contentSync.handleChange}
         onMount={handleMount}
         options={{
