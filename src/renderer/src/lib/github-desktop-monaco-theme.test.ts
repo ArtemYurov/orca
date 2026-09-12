@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import { describe, expect, it, vi } from 'vitest'
 import {
   GITHUB_DESKTOP_DARK_THEME_ID,
@@ -5,6 +6,8 @@ import {
   registerGithubDesktopThemes,
   resolveMonacoThemeName
 } from './github-desktop-monaco-theme'
+
+const mainCss = fs.readFileSync(new URL('../assets/main.css', import.meta.url), 'utf8')
 
 function registerAndCollect(): Map<string, Record<string, unknown>> {
   const defined = new Map<string, Record<string, unknown>>()
@@ -36,6 +39,14 @@ describe('github desktop monaco theme', () => {
       expect(colors['diffEditor.insertedTextBackground'], id).toBe('#00000000')
       expect(colors['diffEditor.removedTextBackground'], id).toBe('#00000000')
     }
+  })
+
+  it('lifts diff selection above the flat line background', () => {
+    // Фон строки рисуется поверх выделения (DecorationsOverlay идёт после
+    // SelectionsOverlay), а цвета выше опаковые — выделение поднимает CSS.
+    expect(mainCss).toMatch(
+      /\.monaco-diff-editor \.lines-content \.selected-text\s*{[^}]*z-index:\s*1;/s
+    )
   })
 
   it('strips the leading # from token rule colors, which Monaco rejects', () => {

@@ -2185,6 +2185,13 @@ html.native-shell .app-layout {
   width: 100%;
 }
 
+/* Why: Monaco puts DecorationsOverlay after SelectionsOverlay in one unpositioned
+   stack, so a flat (non-translucent) diff line background paints over
+   `.selected-text` and hides the selection. Lift selection above it in diffs. */
+.monaco-diff-editor .lines-content .selected-text {
+  z-index: 1;
+}
+
 /* ── Git conflict decorations ───────────────────────────────────── */
 
 .monaco-editor .orca-conflict-marker-line {
